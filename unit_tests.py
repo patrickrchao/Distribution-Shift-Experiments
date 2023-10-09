@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from statistical_problems import GaussianMean, UniformLocation
+from statistical_problems import GaussianLocation, UniformLocation
 from estimators import MeanEstimator
 from perturbations import ConstantShiftFirst, ConstantShiftOnes, GaussianIDSPert
 from simulation import Simulation
@@ -8,7 +8,7 @@ from simulation import Simulation
 
 class TestGaussianMean(unittest.TestCase):
     def setUp(self):
-        self.problem = GaussianMean(n=100, p=3, theta=np.array(
+        self.problem = GaussianLocation(n=100, p=3, theta=np.array(
             [0, 1, 2]), sigma=np.diag([2,3,4]), loss="squared_error")
 
     def test_sample(self):
@@ -66,8 +66,8 @@ class TestPerturbations(unittest.TestCase):
         "sigma":np.diag([1,2,3]),
         "loss":"squared_error"
         }
-        problem = GaussianMean(**params)
-        epsilon_values = np.linspace(0,1,10)
+        problem = GaussianLocation(**params)
+        epsilon_values = np.linspace(0.1,2,10)
         num_copies = 10000
         self.simulation = Simulation(problem, epsilon_values, num_copies)
         data = np.random.multivariate_normal(params["theta"],params["sigma"],size=(num_copies,params["n"]))
@@ -79,7 +79,7 @@ class TestPerturbations(unittest.TestCase):
             
             np.testing.assert_almost_equal(psi, np.sqrt(np.maximum(0,ep**2-trace/((n-1)**2))), decimal=8)
             np.testing.assert_almost_equal(zeta, np.minimum(np.sqrt(ep**2/trace),1/(n-1)), decimal=8)
-            
+
             self.assertTrue(perturbation.check_perturbation(ep, data))
     
     def test_uniform_pert(self):
@@ -90,7 +90,7 @@ class TestPerturbations(unittest.TestCase):
         "loss":"squared_error"
         }
         problem = UniformLocation(**params)
-        epsilon_values = np.linspace(0,1,10)
+        epsilon_values = np.linspace(0.01,1,10)
         num_copies = 10000
         self.simulation = Simulation(problem, epsilon_values, num_copies)
         n = params["n"]
@@ -106,7 +106,7 @@ class TestPerturbations(unittest.TestCase):
 
 class TestSimulation(unittest.TestCase):
     def setUp(self):
-        problem = GaussianMean(n=100, p=3, theta=np.array(
+        problem = GaussianLocation(n=100, p=3, theta=np.array(
             [0, 1, 2]), sigma=np.diag([1,2,3]), loss="squared_error")
         epsilon_values = [0.1, 0.2, 0.3]
         num_copies = 5

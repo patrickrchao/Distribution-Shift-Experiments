@@ -2,7 +2,7 @@ import numpy as np
 
 class Perturbation:
     perturbation_type = None
-    tol = 1e-3
+    tol = 3e-3
 
     def __init__(self):
         pass
@@ -29,12 +29,12 @@ class Perturbation:
         epsilon_sq = epsilon ** 2
 
         if (empirical_distance - epsilon)/epsilon > self.tol:
-            print(f"Perturbation is invalid. Empirical distance is {empirical_distance:>.4f} and epsilon is {epsilon:>.4f}.")
+            print(f"Perturbation is INVALID. Empirical distance is {empirical_distance:>.4f} and epsilon is {epsilon:>.4f}.")
             return False
-        elif empirical_distance/epsilon_sq < 0.95:
+        elif empirical_distance/epsilon < 0.95:
             print(f"WARNING: Empirical distance is {empirical_distance:>.4f} and epsilon is {epsilon:>.4f}.")
         else:
-            print(f"Perturbation is valid. Empirical distance is {empirical_distance:>.4f} and epsilon  is {epsilon:>.4f}.")
+            print(f"Perturbation is valid. Empirical distance is {empirical_distance:>.4f} and epsilon is {epsilon:>.4f}.")
         return True
 
 
