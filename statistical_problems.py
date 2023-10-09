@@ -103,7 +103,7 @@ class GaussianLocation(StatisticalProblem):
         return np.random.multivariate_normal(mean=self.theta, cov=self.sigma, size=(num_copies,self.n))
 
     def get_estimators(self):
-        return [MeanEstimator()]
+        return [MeanEstimator(), MedianEstimator()]
         
     def get_perturbations(self):
         zeta_mean_shift = np.sqrt(self.n/self.trace)
@@ -153,8 +153,10 @@ class UniformLocation(StatisticalProblem):
 
     def get_estimators(self):
         estimators = [MeanEstimator(), MedianEstimator(), MaxMinEstimator()]
-        for k in np.linspace(2, int(np.sqrt(self.n)),num=10):
+        for k in range(2, self.n//2+1):
             estimators.append(kthEstimator(int(k)))
+        # for k in np.linspace(2, int(np.sqrt(self.n)),num=10):
+        #     estimators.append(kthEstimator(int(k)))
         return estimators
         
     def get_perturbations(self):
@@ -163,7 +165,7 @@ class UniformLocation(StatisticalProblem):
         perturbations.ConstantShiftOnes(),
         perturbations.ShiftMax(),
         ]
-        for k in np.linspace(2, int(np.sqrt(self.n)),num=10):
+        for k in range(2, self.n//2+1):
             perts.append(perturbations.ShiftKth(int(k)))
         valid_perturbations = [p for p in perts if p.perturbation_type in self.hierarchy[self.perturbation_class]]
         return valid_perturbations
@@ -188,14 +190,14 @@ class LinearRegression(StatisticalProblem):
         n = self.n
         
         if params['loss'] == "squared_error":
-            lb_c1_bayes = np.sqrt(n / np.trace(sigma @ P_X_Sigma))
+            lb_c1_bayes = 1/np.sqrt( np.trace(sigma @ P_X_Sigma))
             lb_c2_bayes = np.trace(np.linalg.inv(X.T @ np.linalg.inv(sigma) @ X))
             _,S,_ = np.linalg.svd(X)
-            ub_c1 = np.sqrt(n)/S[-1]
+            ub_c1 = 1/S[-1]
             ub_c2_helper = np.linalg.inv(X.T@X)
             ub_c2 = np.sqrt(np.trace(sigma @ X @ ub_c2_helper @ ub_c2_helper @ X.T))
 
-            lb_c1_modulus = n/(S[-1]**2)
+            lb_c1_modulus = 1/(S[-1]**2)
             lb_c2_modulus = lb_c2_bayes
 
             bounds = [
@@ -207,7 +209,7 @@ class LinearRegression(StatisticalProblem):
             
             rate_c = np.sqrt(np.trace(sigma @ P_X_Sigma)/n)
             bounds = [
-                    Bound("Rate","JDS" ,"C1",  lambda epsilon: (epsilon + rate_c) ** 2)
+                    Bound("Rate","JDS" ,"C1",  lambda epsilon: (epsilon/np.sqrt(self.n) + rate_c) ** 2)
                 ]
         else:
             raise ValueError("Loss function not supported")
@@ -227,11 +229,11 @@ class LinearRegression(StatisticalProblem):
         Returns
         -------
         np.array
-            A 3D array of shape (num_copies, n, p) containing the data.
+            A 3D array of shape (num_copies, 1, n) containing the data.
         """
         noise = np.random.multivariate_normal(mean=np.zeros(self.n), cov=self.sigma, size=(num_copies))
         Y = self.X @ self.theta + noise
-        return Y.reshape(num_copies,self.n,1)
+        return Y.reshape(num_copies, 1, self.n)
 
     def get_estimators(self):
         estimators = [LeastSquaresEstimator(self.X)]
@@ -240,9 +242,9 @@ class LinearRegression(StatisticalProblem):
         return estimators
         
     def get_perturbations(self):
-        zeta_pert = np.sqrt(self.n/np.trace(self.sigma @ self.P_X))
-        zeta_gen_pert = np.sqrt(self.n/np.trace(self.sigma @ self.P_X_Sigma))
-        zeta_constant_pert = np.sqrt(self.n)
+        zeta_pert = np.sqrt(1/np.trace(self.sigma @ self.P_X))
+        zeta_gen_pert = np.sqrt(1/np.trace(self.sigma @ self.P_X_Sigma))
+        zeta_constant_pert = 1#np.sqrt(self.n)
         perts = [
         perturbations.ConstantShiftFirst(),
         perturbations.ConstantShiftOnes(),

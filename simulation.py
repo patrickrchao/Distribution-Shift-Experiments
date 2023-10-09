@@ -49,7 +49,7 @@ class Simulation:
                 risk_per_epsilon[i] = max_risk
         return results
 
-    def generate_plot(self, results):
+    def generate_plot(self, results,show=True):
         plt.figure()
         # Plot Minimax Bounds
         
@@ -82,7 +82,7 @@ class Simulation:
         # Plot vertical dashed line for Gaussian location
         if self.problem.name == "Gaussian Location":
             
-            plt.axvline(x= self.log_base_n(self.problem.ids_transition),label=r"$\varepsilon=\sqrt{\mathrm{Tr}\Sigma}/(n-1)$", color="slategray",linestyle="dashed",lw=3)
+            plt.axvline(x= self.log_base_n(self.problem.ids_transition),label=r"$\varepsilon=\sqrt{p}\sigma/(n-1)$", color="slategray",linestyle="dashed",lw=3)
         plt.xlabel(r'Power $\alpha$   ($\varepsilon=n^\alpha$)')
         plt.ylabel(r'Log Risk / Log n')
         plt.legend()
@@ -93,7 +93,7 @@ class Simulation:
         if self.include_title:
             plt.title(plt_title)
         plt.grid(axis="x")
-        file_name = f'../Images/{self.problem.name.replace(" ","_")}_{self.problem.perturbation_class}_n_{self.problem.n}'
+        file_name = f'./Images/{self.problem.name.replace(" ","_")}_{self.problem.perturbation_class}_n_{self.problem.n}'
         if self.problem.name == "Linear Regression":
             file_name += f'_{self.problem.params["loss"]}'
             sigma = self.problem.sigma
@@ -101,7 +101,8 @@ class Simulation:
                 file_name += "_noniso"
         file_name += ".pdf"
         plt.savefig(file_name,bbox_inches='tight')
-        plt.show()
+        if show:
+            plt.show()
         
 
     def log_base_n(self, value):

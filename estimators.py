@@ -53,15 +53,17 @@ class LeastSquaresEstimator(Estimator):
     def _estimate(self, Y):
         """
         Y : np.array
-            a 3D array of shape (num_copies, n, 1) containing num_copies copies of the data.
+            a 3D array of shape (num_copies, 1, n) containing num_copies copies of the data.
         Returns
         -------
         np.array
             A 2D array of shape (num_copies,p) containing the estimated parameter
         """
         X = self.X
-        assert(len(Y.shape) == 3 and Y.shape[2] == 1)
+
+        assert(len(Y.shape) == 3 and Y.shape[1] == 1)
         assert(len(X.shape) == 2)
+    
         
         # Swap Y's first two axes
         estimate = np.linalg.inv(X.T @ X) @ X.T @ (Y.squeeze().T)
@@ -77,7 +79,7 @@ class GeneralizedLeastSquaresEstimator(Estimator):
     def _estimate(self, Y):
         """
         Y : np.array
-            a 3D array of shape (num_copies, n, 1) containing num_copies copies of the data.
+            a 3D array of shape (num_copies, 1, n) containing num_copies copies of the data.
         Returns
         -------
         np.array
@@ -86,7 +88,7 @@ class GeneralizedLeastSquaresEstimator(Estimator):
         X = self.X
         Sigma = self.Sigma
         Sigma_inv = np.linalg.inv(Sigma)
-        assert(len(Y.shape) == 3 and Y.shape[2] == 1)
+        assert(len(Y.shape) == 3 and Y.shape[1] == 1)
         assert(len(X.shape) == 2)
         
         # Swap Y's first two axes

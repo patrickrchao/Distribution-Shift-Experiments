@@ -198,7 +198,7 @@ class LinearRegressionPert(Perturbation):
         
         shift = self.P_X @ (Y.squeeze().T) - (self.X @ self.theta).reshape(-1,1)
         
-        return Y + epsilon * self.zeta * shift.T[:,:,None]
+        return Y + epsilon * self.zeta * shift.T[:,None,:]
 
 class GeneralizedLinearRegressionPert(Perturbation):
     perturbation_type = "JDS"
@@ -220,12 +220,11 @@ class GeneralizedLinearRegressionPert(Perturbation):
         epsilon : float
             The perturbation parameter.
         data : np.array
-            A 3D array of shape (num_copies, n, 1) containing the data.
+            A 3D array of shape (num_copies, 1, n) containing the data.
         """
         
         shift = self.P_X_Sigma @ (Y.squeeze().T) - (self.X @ self.theta).reshape(-1,1)
-        
-        return Y + epsilon * self.zeta * shift.T[:,:,None]
+        return Y + epsilon * self.zeta * shift.T[:,None,:]
 
 class LinearRegressionSingularVecPert(Perturbation):
     perturbation_type = "JDS"
@@ -255,7 +254,7 @@ class LinearRegressionSingularVecPert(Perturbation):
         """
         
         #shift = self.P_X @ (Y.squeeze().T) - (self.X @ self.theta).reshape(-1,1)
-        shift = self.shift_dir.reshape(1,-1,1)
+        shift = self.shift_dir.reshape(1,1,-1)
         #print("2",Y.shape,shift.shape)
         
         #print(np.linalg.norm(self.zeta * shift,axis=1).flatten())
