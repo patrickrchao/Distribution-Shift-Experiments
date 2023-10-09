@@ -1,4 +1,4 @@
-#  &nbsp; **Statistical Estimation Under Distribution Shift: Wasserstein Perturbations and Minimax Theory** &nbsp; 
+# **Statistical Estimation Under Distribution Shift: Wasserstein Perturbations and Minimax Theory**
 
 
 [![arXiv](https://img.shields.io/badge/statML-arXiv%3A2308.01853-b31b1b)](https://arxiv.org/abs/2308.01853)
@@ -23,14 +23,14 @@ To reproduce the simulations in the paper, run the following:
 ```
 python3 run_all_experiments.py
 ```
-This runs the Gaussian and Uniform problems, as well as the linear regression problem under homoskedastic and heteroskedastic error and both squared and prediction error.
+This runs the Gaussian and Uniform problems, as well as the Linear Regression problem under homoskedastic and heteroskedastic noise and both squared and prediction error.
 The uniform experiment takes the bulk of computational runtime due to computing many estimators and perturbations.
 
-The outputs are saved by default in the `Images` folder.
+The outputs are saved in the `Images` folder.
 
 
 ### Run Individual Simulation
-It is also possible to run individual simulations with custom parameters. In `run_experiments.ipynb', one may choose the statistical problem, parameters loss function, and number of simulated copies.
+It is also possible to run individual simulations with custom parameters. In `run_experiments.ipynb`, one may choose the statistical problem, parameters loss function, and number of simulated copies.
 
 
 
