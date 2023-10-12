@@ -12,7 +12,7 @@ Distribution shifts are a serious concern in modern statistical learning as they
     We consider perturbations that are either independent 
     or coordinated joint shifts across data points.
     We analyze several important statistical problems, including location estimation, linear regression, and non-parametric density estimation. 
-    Under a squared loss for mean estimation and prediction error in linear regression, we find the \emph{exact minimax risk}, a least favorable perturbation, and show that the sample mean and least squares estimators are respectively optimal. For other problems, we provide nearly optimal estimators and precise finite-sample bounds.
+    Under a squared loss for mean estimation and prediction error in linear regression, we find the *exact minimax risk*, a least favorable perturbation, and show that the sample mean and least squares estimators are respectively optimal. For other problems, we provide nearly optimal estimators and precise finite-sample bounds.
     We also introduce several tools for bounding the minimax risk under distribution shift, such as a smoothing technique for location families, and generalizations of classical tools including least favorable sequences of priors, the modulus of continuity, 
     as well as Le Cam's, Fano's, and Assouad's methods.
 
